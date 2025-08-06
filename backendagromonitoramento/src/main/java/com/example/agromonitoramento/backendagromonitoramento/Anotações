@@ -1,0 +1,49 @@
+🔸 1. Entidade (Model)
+Nome: Usuario
+
+Função: Representa o usuário no banco de dados. Terá os campos como ID, nome de usuário e senha (criptografada).
+
+
+
+🔸 2. Repositório
+Nome: UsuarioRepository
+
+Função: Interface que se comunica com o banco. Permite salvar, buscar, deletar e atualizar usuários de forma simples usando JPA.
+
+
+
+🔸 3. DTOs (Data Transfer Object)
+Nome: UsuarioRequestDTO
+
+Função: Representa os dados recebidos do front-end no cadastro (ex: username e senha).
+
+Nome: LoginRequestDTO
+
+Função: Representa os dados recebidos no momento do login (ex: username e senha para validação).
+
+-->Um DTO em Java é um objeto usado para transferir dados entre camadas da aplicação, servindo como
+filtro para que apenas as informações necessárias — geralmente vindas do frontend — sejam recebidas
+ou enviadas pelo backend."
+
+🔸 4. Serviço (Service)
+Nome: UsuarioService
+
+Função: Contém a lógica de negócio, como cadastrar usuário (com senha criptografada com bcrypt) e validar login (comparar senha enviada com a senha criptografada do banco).
+
+
+
+🔸 5. Controlador (Controller)
+Nome: UsuarioController
+
+Função: Expor as rotas HTTP (endpoints) para o front-end, como:
+
+POST /api/usuarios/cadastrar
+
+POST /api/usuarios/login
+
+
+
+🔸 6. Configuração
+Nome: SecurityConfig
+
+Função: Define configurações de segurança como o uso do BCrypt para codificar a senha.
