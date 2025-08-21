@@ -18,7 +18,15 @@ public class SecurityConfig{
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/usuarios/cadastro","/usuarios/","/usuarios/login").permitAll()
+                        .requestMatchers(
+                                "/usuarios/cadastro",
+                                "/usuarios/",
+                                "/usuarios/login",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -27,6 +35,4 @@ public class SecurityConfig{
         return http.build();
 
     }
-
-
 }

@@ -6,11 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class BackendagromonitoramentoApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(BackendagromonitoramentoApplication.class, args);
-
-
     }
-
 }

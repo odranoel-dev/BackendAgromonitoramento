@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/backendagromonitoramento.iml" filepath="$PROJECT_DIR$/.idea/backendagromonitoramento.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backendagromonitoramento/backendagromonitoramento.iml" filepath="$PROJECT_DIR$/backendagromonitoramento/backendagromonitoramento.iml" />
     </modules>
   </component>
 </project>
