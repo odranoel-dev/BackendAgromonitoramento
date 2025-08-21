@@ -1,9 +1,9 @@
 package com.example.agromonitoramento.backendagromonitoramento.service;
 
-import com.example.agromonitoramento.backendagromonitoramento.dto.AtualizarUsuarioDTO;
-import com.example.agromonitoramento.backendagromonitoramento.dto.CadastroUsuarioDTO;
-import com.example.agromonitoramento.backendagromonitoramento.dto.LoginUsuarioDTO;
-import com.example.agromonitoramento.backendagromonitoramento.model.Usuario;
+import com.example.agromonitoramento.backendagromonitoramento.dto.UpdateUserIndividualDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.RegisterUserBusinessDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.LoginUserDTO;
+import com.example.agromonitoramento.backendagromonitoramento.model.UserIndividualModel;
 import com.example.agromonitoramento.backendagromonitoramento.repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UsuarioService {
     private WhatsappService whatsAppService;
 
 
-    public void cadastrarUsuario(CadastroUsuarioDTO dto) {
+    public void cadastrarUsuario(RegisterUserBusinessDTO dto) {
 
         String cpf = dto.getCpf();
         String email = dto.getEmail();
@@ -40,13 +40,15 @@ public class UsuarioService {
         String telefone2 = dto.getTelefone2();
         String telefone3 = dto.getTelefone3();
         String nomeCompleto = dto.getNomeCompleto();
+//        GeneroUsuarioEnum genero = GeneroUsuarioEnum.valueOf(dto.getGenero().toUpperCase());
+        //String genero = dto.getGenero();
 
         validarDataNascimento(dataNascimento);
         validarSenha(senha);
         validarTelefones(telefone1, telefone2, telefone3);
         validarCpfEmail(cpf, email);
 
-        Usuario usuario = new Usuario();
+        UserIndividualModel usuario = new UserIndividualModel();
         //Criptografa a senha antes de salvar
         usuario.setSenha(passwordEncoder.encode(senha));
         usuario.setDataNascimento(dataNascimento);
@@ -158,16 +160,16 @@ public class UsuarioService {
         }
     }
 
-    public List<Usuario> listarUsuarios() {
+    public List<UserIndividualModel> listarUsuarios() {
         return usuarioRepository.findAll();
     }
 
-    public void excluirUsuario(Usuario id) {
+    public void excluirUsuario(UserIndividualModel id) {
 
         usuarioRepository.delete(id);
     }
 
-    public void autenticarLogin(LoginUsuarioDTO loginUsuarioDTO) {
+    public void autenticarLogin(LoginUserDTO loginUsuarioDTO) {
 
         String email = loginUsuarioDTO.getEmail();
         String senha = loginUsuarioDTO.getSenha();
@@ -176,7 +178,7 @@ public class UsuarioService {
 
 
         //verifica se o email digitado existe no banco
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        UserIndividualModel usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("E-mail não cadastrado"));
 
 
@@ -211,15 +213,16 @@ public class UsuarioService {
 
     }
 
-    public void statusUsuario (Usuario usuarios) {
+    public void statusUsuario (UserIndividualModel usuarios) {
 
         //[A Fazer] -> Inativar o usuário caso ficar +30 dias sem acessar
 
     }
 
-    public void atualizarUsuario(UUID id, AtualizarUsuarioDTO atualizarUsuarioDTO){
+    public void atualizarUsuario(UUID id, UpdateUserIndividualDTO atualizarUsuarioDTO){
 
-        Usuario usuario = usuarioRepository.findById(id)
+
+        UserIndividualModel usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
 
