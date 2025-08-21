@@ -20,6 +20,8 @@ public class SecurityConfig{
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/usuarios/cadastro","/usuarios/","/usuarios/login").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/**").permitAll()
+                        .requestMatchers("/api/webhook/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

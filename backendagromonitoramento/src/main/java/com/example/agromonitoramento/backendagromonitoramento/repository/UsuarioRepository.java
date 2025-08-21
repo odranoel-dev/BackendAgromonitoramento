@@ -1,6 +1,5 @@
 package com.example.agromonitoramento.backendagromonitoramento.repository;
 
-import com.example.agromonitoramento.backendagromonitoramento.enums.StatusUsuarioEnum;
 import com.example.agromonitoramento.backendagromonitoramento.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

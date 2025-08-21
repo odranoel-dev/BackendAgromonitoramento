@@ -47,3 +47,12 @@ POST /api/usuarios/login
 Nome: SecurityConfig
 
 Função: Define configurações de segurança como o uso do BCrypt para codificar a senha.
+
+
+
+PF E PJ
+pf - nome completo, telefones, e-mail, senha, data nasc
+pj - razão social, cnpj, responsavel, e-mail, senha, telefone obrigatório
+Após login ter a opção de cadastrar fazenda e telefones.
+
+PJ -  ter acesso a 3 telefones e PF acesso a um unico contato.

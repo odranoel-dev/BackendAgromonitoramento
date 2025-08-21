@@ -18,9 +18,6 @@ public class CadastroUsuarioDTO {
     @CPF(message = "CPF invalido")// se usar Hibernate Validator (valida formato e dígito)
     private String cpf;
 
-    @NotBlank(message = "Gênero é obrigatório")
-    private String genero;
-
     private String telefone1;
 
     private String telefone2;
@@ -65,14 +62,6 @@ public class CadastroUsuarioDTO {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
     }
 
     public String getTelefone1() {

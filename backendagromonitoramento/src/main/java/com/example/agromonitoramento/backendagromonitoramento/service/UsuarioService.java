@@ -3,8 +3,6 @@ package com.example.agromonitoramento.backendagromonitoramento.service;
 import com.example.agromonitoramento.backendagromonitoramento.dto.AtualizarUsuarioDTO;
 import com.example.agromonitoramento.backendagromonitoramento.dto.CadastroUsuarioDTO;
 import com.example.agromonitoramento.backendagromonitoramento.dto.LoginUsuarioDTO;
-import com.example.agromonitoramento.backendagromonitoramento.enums.GeneroUsuarioEnum;
-import com.example.agromonitoramento.backendagromonitoramento.enums.StatusUsuarioEnum;
 import com.example.agromonitoramento.backendagromonitoramento.model.Usuario;
 import com.example.agromonitoramento.backendagromonitoramento.repository.UsuarioRepository;
 
@@ -28,7 +26,8 @@ public class UsuarioService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    private StatusUsuarioEnum statusUsuarioEnum;
+    @Autowired
+    private WhatsappService whatsAppService;
 
 
     public void cadastrarUsuario(CadastroUsuarioDTO dto) {
@@ -41,8 +40,6 @@ public class UsuarioService {
         String telefone2 = dto.getTelefone2();
         String telefone3 = dto.getTelefone3();
         String nomeCompleto = dto.getNomeCompleto();
-        GeneroUsuarioEnum genero = GeneroUsuarioEnum.valueOf(dto.getGenero().toUpperCase());
-        //String genero = dto.getGenero();
 
         validarDataNascimento(dataNascimento);
         validarSenha(senha);
@@ -55,14 +52,14 @@ public class UsuarioService {
         usuario.setDataNascimento(dataNascimento);
         usuario.setCpf(cpf);
         usuario.setEmail(email);
-        usuario.setGenero(genero);
         usuario.setNomeCompleto(nomeCompleto);
         usuario.setTelefone1(telefone1);
         usuario.setTelefone2(telefone2);
         usuario.setTelefone3(telefone3);
-        usuario.setStatusDoUsuario(statusUsuarioEnum.ATIVO);
+        usuario.setStatusDoUsuario(true);
         usuarioRepository.save(usuario);
 
+        whatsAppService.enviarMensagensBoasVindasComPagamento(nomeCompleto,telefone1);
     }
 
     public void validarCpfEmail(String cpf, String email) {
@@ -182,8 +179,9 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("E-mail não cadastrado"));
 
+
         //verifica se o usuário está ativo
-        if (!statusUsuarioEnum.ATIVO.equals(usuario.getStatusDoUsuario())){
+        if(!usuario.getStatusDoUsuario()){
             throw new IllegalArgumentException("Usuário inativo");
         }
 
@@ -194,7 +192,7 @@ public class UsuarioService {
 
             //Inativa o usuário caso errar a senha 3x
             if (usuario.getTentativasFalhasLogin()==3){
-                usuario.setStatusDoUsuario(statusUsuarioEnum.INATIVO);
+                usuario.setStatusDoUsuario(false);
                 usuarioRepository.save(usuario);
                 throw new IllegalArgumentException("Usuário inativado por excesso de tentativa");
             }
@@ -221,15 +219,43 @@ public class UsuarioService {
 
     public void atualizarUsuario(UUID id, AtualizarUsuarioDTO atualizarUsuarioDTO){
 
-
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
 
+        if(atualizarUsuarioDTO.getNomeCompleto()!= null){
+            usuario.setNomeCompleto(atualizarUsuarioDTO.getNomeCompleto());
+        }
+
+        if (atualizarUsuarioDTO.getDataNascimento()!=null){
+            validarDataNascimento(atualizarUsuarioDTO.getDataNascimento());
+            usuario.setDataNascimento(atualizarUsuarioDTO.getDataNascimento());
+        }
 
 
-        //reutilizar os metodos de senha, e-mail e telefone.
-        //[A Fazer] -> atualizar as informações do usuário
+        if (atualizarUsuarioDTO.getTelefone1() != null ||
+                atualizarUsuarioDTO.getTelefone2() != null ||
+                atualizarUsuarioDTO.getTelefone3() != null) {
+
+            if (atualizarUsuarioDTO.getTelefone1() !=null){
+                usuario.setTelefone1(atualizarUsuarioDTO.getTelefone1());
+            }
+
+            if (atualizarUsuarioDTO.getTelefone2() !=null){
+                usuario.setTelefone2(atualizarUsuarioDTO.getTelefone2());
+            }
+
+            if (atualizarUsuarioDTO.getTelefone2() !=null){
+                usuario.setTelefone3(atualizarUsuarioDTO.getTelefone3());
+            }
+
+            validarTelefones(usuario.getTelefone1(),
+                    usuario.getTelefone2(),
+                    usuario.getTelefone3());
+
+        }
+
+        usuarioRepository.save(usuario);
 
     }
 }
