@@ -1,5 +1,8 @@
 package com.example.agromonitoramento.backendagromonitoramento.dto;
 
+import lombok.Data;
+
+@Data
 public class WhatsappDTO {
 
     private String number;
@@ -7,22 +10,6 @@ public class WhatsappDTO {
 
     public WhatsappDTO(String number, String text) {
         this.number = number;
-        this.text = text;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
         this.text = text;
     }
 }
