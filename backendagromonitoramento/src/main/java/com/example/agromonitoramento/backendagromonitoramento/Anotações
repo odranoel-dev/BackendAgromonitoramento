@@ -55,4 +55,19 @@ pf - nome completo, telefones, e-mail, senha, data nasc
 pj - razão social, cnpj, responsavel, e-mail, senha, telefone obrigatório
 Após login ter a opção de cadastrar fazenda e telefones.
 
-PJ -  ter acesso a 3 telefones e PF acesso a um unico contato.
+PJ -  ter acesso a 3 telefones e PF acesso a um unico telefone.
+
+
+git branch
+git add .
+git commit -m "mensagem"
+git push origin develop
+
+
+
+cria o container do arquivo docker-compose.yml
+docker-compose up -d
+
+verificar quais containers estão rodando
+docker ps
+

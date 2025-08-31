@@ -25,13 +25,16 @@ public class UserModel{
     @Column(columnDefinition = "uuid", updatable = false,nullable = false) //Define no banco a coluna com tipo de UUID
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(columnDefinition = "boolean default true")

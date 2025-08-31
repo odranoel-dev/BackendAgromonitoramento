@@ -1,14 +1,15 @@
 package com.example.agromonitoramento.backendagromonitoramento.service;
 
-import com.example.agromonitoramento.backendagromonitoramento.dto.RegisterUserBusinessDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.*;
 import com.example.agromonitoramento.backendagromonitoramento.model.UserBusinessModel;
 import com.example.agromonitoramento.backendagromonitoramento.model.UserIndividualModel;
 import com.example.agromonitoramento.backendagromonitoramento.repository.UserBusinessRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-
+import java.util.UUID;
 
 
 @Service
@@ -31,6 +32,10 @@ public class UserBusinessService {
 
     @Autowired
     private EmailValidationService emailValidationService;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     public void createUserBusiness(RegisterUserBusinessDTO registerUserBusinessDTO) {
 
@@ -63,7 +68,7 @@ public class UserBusinessService {
         userBusinessModel.setActive(true);
 
         userBusinessRepository.save(userBusinessModel);
-        //whatsAppService.enviarMensagensBoasVindasComPagamento(ownerName,ownerPhoneNumber.get(0));
+        whatsAppService.enviarMensagemBoasVindas(ownerName,phoneNumber);
     }
 
     public void validateCnpj(String cnpj) {
@@ -76,53 +81,37 @@ public class UserBusinessService {
 
     }
 
+    public UpdateUserBusinessResponseDTO updateUserBusiness(UUID id, UpdateUserBusinessRequestDTO updateUserBusinessRequestDTO){
 
-/*
-    public void UpdateUserBusiness(UUID id, UpdateUserIndividualDTO atualizarUsuarioDTO){
+        UserBusinessModel usuario = userBusinessRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-
-        UserIndividualModel usuario = userBusinessRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
-
-
-        if(atualizarUsuarioDTO.getNomeCompleto()!= null){
-            usuario.setNomeCompleto(atualizarUsuarioDTO.getNomeCompleto());
-        }
-
-        if (atualizarUsuarioDTO.getDataNascimento()!=null){
-            validarDataNascimento(atualizarUsuarioDTO.getDataNascimento());
-            usuario.setDataNascimento(atualizarUsuarioDTO.getDataNascimento());
+        if(updateUserBusinessRequestDTO.getName()!= null){
+            usuario.setName(updateUserBusinessRequestDTO.getName());
         }
 
 
-        if (atualizarUsuarioDTO.getTelefone1() != null ||
-                atualizarUsuarioDTO.getTelefone2() != null ||
-                atualizarUsuarioDTO.getTelefone3() != null) {
+        boolean isBusinessNameEmpty = updateUserBusinessRequestDTO.getBusinessName() == null ||
+                updateUserBusinessRequestDTO.getBusinessName().isBlank();
 
-            if (atualizarUsuarioDTO.getTelefone1() !=null){
-                usuario.setTelefone1(atualizarUsuarioDTO.getTelefone1());
-            }
+        if (!isBusinessNameEmpty){
+            usuario.setBusinessName(updateUserBusinessRequestDTO.getBusinessName());
+        }
 
-            if (atualizarUsuarioDTO.getTelefone2() !=null){
-                usuario.setTelefone2(atualizarUsuarioDTO.getTelefone2());
-            }
+        if (updateUserBusinessRequestDTO.getPhoneNumber() != null){
+            phoneNumberValidationService.validatePhoneNumber(updateUserBusinessRequestDTO.getPhoneNumber());
+            usuario.setPhoneNumber(updateUserBusinessRequestDTO.getPhoneNumber());
+        }
 
-            if (atualizarUsuarioDTO.getTelefone2() !=null){
-                usuario.setTelefone3(atualizarUsuarioDTO.getTelefone3());
-            }
-
-            validarTelefones(usuario.getTelefone1(),
-                    usuario.getTelefone2(),
-                    usuario.getTelefone3());
-
+        if (updateUserBusinessRequestDTO.getEmail() != null){
+            emailValidationService.emailValidation(updateUserBusinessRequestDTO.getEmail());
+            usuario.setEmail(updateUserBusinessRequestDTO.getEmail());
         }
 
         userBusinessRepository.save(usuario);
 
+        return modelMapper.map(usuario,UpdateUserBusinessResponseDTO.class);
     }
-
- */
-
 }
 
 

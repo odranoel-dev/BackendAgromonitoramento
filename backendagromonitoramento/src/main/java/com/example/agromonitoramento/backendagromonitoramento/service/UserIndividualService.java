@@ -1,12 +1,18 @@
 package com.example.agromonitoramento.backendagromonitoramento.service;
 
+import com.example.agromonitoramento.backendagromonitoramento.config.ModelMapperConfig;
 import com.example.agromonitoramento.backendagromonitoramento.dto.RegisterUserIndividualDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.UpdateUserIndividualRequestDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.UpdateUserIndividualResponseDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.UpdateUserResponseDTO;
 import com.example.agromonitoramento.backendagromonitoramento.model.UserIndividualModel;
 import com.example.agromonitoramento.backendagromonitoramento.repository.UserIndividualRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
+import java.util.UUID;
 
 @Service
 public class UserIndividualService {
@@ -28,6 +34,10 @@ public class UserIndividualService {
 
     @Autowired
     private PhoneNumberValidationService phoneNumberValidationService;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     public void createUserIndividual(RegisterUserIndividualDTO dto) {
 
@@ -54,7 +64,7 @@ public class UserIndividualService {
 
         userIndividualRepository.save(userIndividualModel);
 
-        //whatsAppService.enviarMensagensBoasVindasComPagamento(name,phoneNumber.get(0));
+        whatsAppService.enviarMensagemBoasVindas(name,phoneNumber);
     }
 
     public void validateCpf(String cpf) {
@@ -68,37 +78,30 @@ public class UserIndividualService {
     }
 
 
-    /*
-    public void UpdateUserIndividual(UUID id, UpdateUserIndividualDTO updateUserIndividualDTO){
-
+    public UpdateUserIndividualResponseDTO updateUserIndividual(UUID id, UpdateUserIndividualRequestDTO updateUserIndividualRequestDTO){
 
         UserIndividualModel usuario = userIndividualRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-
-        if(updateUserIndividualDTO.getName()!= null){
-            usuario.setName(updateUserIndividualDTO.getName());
+        if(updateUserIndividualRequestDTO.getName()!= null){
+            usuario.setName(updateUserIndividualRequestDTO.getName());
         }
 
-        if (updateUserIndividualDTO.getDataNascimento()!=null){
-            validarDataNascimento(updateUserIndividualDTO.getDataNascimento());
-            usuario.setDataNascimento(updateUserIndividualDTO.getDataNascimento());
+        if (updateUserIndividualRequestDTO.getPhoneNumber() != null){
+            phoneNumberValidationService.validatePhoneNumber(updateUserIndividualRequestDTO.getPhoneNumber());
+            usuario.setPhoneNumber(updateUserIndividualRequestDTO.getPhoneNumber());
         }
 
-
-        if (updateUserIndividualDTO.getPhoneNumber() !=) {
-
-            if (atualizarUsuarioDTO.getTelefone1() !=null){
-                usuario.setTelefone1(atualizarUsuarioDTO.getTelefone1());
-            }
-            validarTelefones(usuario.getTelefone1());
+        if (updateUserIndividualRequestDTO.getEmail() != null){
+            emailValidationService.emailValidation(updateUserIndividualRequestDTO.getEmail());
+            usuario.setEmail(updateUserIndividualRequestDTO.getEmail());
         }
 
-        userBusinessRepository.save(usuario);
+        userIndividualRepository.save(usuario);
 
+        return modelMapper.map(usuario,UpdateUserIndividualResponseDTO.class);
     }
 
-     */
 }
 
 

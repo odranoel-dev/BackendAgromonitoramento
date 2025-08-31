@@ -3,7 +3,7 @@ services:
     image: postgres:16.2-alpine3.19
     container_name: "backendagromonitoramento"
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456

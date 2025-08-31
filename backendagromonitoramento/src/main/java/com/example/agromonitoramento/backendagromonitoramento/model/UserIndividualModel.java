@@ -10,7 +10,7 @@ import lombok.Data;
 @DiscriminatorValue("INDIVIDUAL")
 public class UserIndividualModel extends UserModel{
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String cpf;
 
 }

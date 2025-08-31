@@ -1,8 +1,7 @@
 package com.example.agromonitoramento.backendagromonitoramento.controller;
 
-import com.example.agromonitoramento.backendagromonitoramento.dto.RegisterUserBusinessDTO;
-import com.example.agromonitoramento.backendagromonitoramento.dto.RegisterUserIndividualDTO;
-import com.example.agromonitoramento.backendagromonitoramento.dto.LoginUserDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.*;
+import com.example.agromonitoramento.backendagromonitoramento.model.UserModel;
 import com.example.agromonitoramento.backendagromonitoramento.service.AuthenticationUserService;
 import com.example.agromonitoramento.backendagromonitoramento.service.UserBusinessService;
 import com.example.agromonitoramento.backendagromonitoramento.service.UserIndividualService;
@@ -11,7 +10,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
+import java.util.UUID;
 
 
 @RestController
@@ -20,19 +26,41 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     @Autowired
-    private UserIndividualService userIndividualService;
+    private AuthenticationUserService authenticationUserService;
 
     @Autowired
-    private AuthenticationUserService authenticationUserService;
+    private UserIndividualService userIndividualService;
 
     @Autowired
     private UserBusinessService userBusinessService;
 
+    @Autowired
+    private JwtEncoder jwtEncoder;
+
+
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginUserDTO loginUsuarioDTO){
-        this.authenticationUserService.identificationUser(loginUsuarioDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("User logged in!");
+    public ResponseEntity<LoginUserResponseDTO> loginResponseResponseEntity(
+            @RequestBody LoginUserRequestDTO loginUserRequestDTO){
+
+        UserModel user = this.authenticationUserService.identificationUser(loginUserRequestDTO);
+
+        var now = Instant.now();
+        var expiresIn = 300L;
+
+        var claims = JwtClaimsSet.builder()
+                .issuer("backendAgromonitoramento")
+                .subject(user.getId().toString())
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(expiresIn))
+                .build();
+
+        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+        return ResponseEntity.ok(new LoginUserResponseDTO(jwtValue, expiresIn));
+
     }
+
+    // passar login tipo request e retorno do tipo response.
 
     @PostMapping("/register-individual")
     public ResponseEntity<String> registerIndividual(@RequestBody @Valid RegisterUserIndividualDTO registerUserIndividualDTO) {
@@ -46,27 +74,26 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
     }
 
-    /*
-    // TODO: id será pego pelo token de autenticação
-    @PutMapping("/update-individual/{id}")
-    public ResponseEntity<String> updateIndividual(
-            @PathVariable UUID id,
-            @RequestBody UpdateUserIndividualDTO atualizarUsuarioDTO
-    ){
-        this.userService.atualizarUsuario(id,atualizarUsuarioDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("User updated!");
+    @PutMapping("/update-individual")
+    public ResponseEntity<UpdateUserIndividualResponseDTO>updateIndividual(JwtAuthenticationToken token,
+                                                                 @RequestBody @Valid UpdateUserIndividualRequestDTO updateUserIndividualRequestDTO) {
+
+        UpdateUserIndividualResponseDTO user = userIndividualService.updateUserIndividual(
+                UUID.fromString(token.getName()),
+                updateUserIndividualRequestDTO);
+
+        return ResponseEntity.ok(user);
     }
 
 
-    // TODO: id será pego pelo token de autenticação
-    @PutMapping("/update-business/{id}")
-    public ResponseEntity<String> updateBusiness(
-            @PathVariable UUID id,
-            @RequestBody UpdateUserIndividualDTO atualizarUsuarioDTO
-    ){
-        this.userService.atualizarUsuario(id,atualizarUsuarioDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("User updated!");
-    }
+    @PutMapping("/update-business")
+    public ResponseEntity<UpdateUserBusinessResponseDTO>updateBusiness(JwtAuthenticationToken token,
+                                                                 @RequestBody @Valid UpdateUserBusinessRequestDTO updateUserBusinessRequestDTO) {
 
-     */
+        UpdateUserBusinessResponseDTO user = userBusinessService.updateUserBusiness(
+                UUID.fromString(token.getName()),
+                updateUserBusinessRequestDTO);
+
+        return ResponseEntity.ok(user);
+    }
 }

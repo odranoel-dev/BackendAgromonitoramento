@@ -30,23 +30,12 @@ public class WhatsappService {
                 restTemplate.postForEntity(API_URL,request,String.class);
     }
 
-    public void enviarMensagemPagamentoConfirmado(String numero, String nome) {
-        String mensagem = "Olá " + nome + " 👋, seu pagamento foi confirmado! 💳🎉";
-        enviarMensagem(numero, mensagem);
-    }
-
-    public void enviarMensagemBoasVindas(String numero) {
-        String mensagem = "Seja bem-vindo ao AgroMonitoramento! 🌱 \n \n" +
+    public void enviarMensagemBoasVindas(String name, String numero) {
+        String mensagem = "Seja bem-vindo, " + name + ", ao AgroMonitoramento! 🌱 \n\n" +
                 "Eu sou o Lavi 🤖, seu assistente virtual na lavoura de soja.\n" +
-                "Comigo, você pode tirar dúvidas sobre sua plantação 🌾 e enviar imagens das folhas de soja para análise de possíveis doenças.\n \n" +
+                "Comigo, você pode tirar dúvidas sobre sua plantação 🌾 e enviar imagens das folhas de soja para análise de possíveis doenças.\n\n" +
                 "Estou aqui para te ajudar no que precisar! ✅";
+
         enviarMensagem(numero, mensagem);
     }
-
-    // Método auxiliar para enviar as duas mensagens em sequência
-    public void enviarMensagensBoasVindasComPagamento(String nome, String numero) {
-        enviarMensagemPagamentoConfirmado(numero, nome);
-        enviarMensagemBoasVindas(numero);
-    }
-
 }

@@ -12,9 +12,10 @@ import lombok.Data;
 @DiscriminatorValue("BUSINESS")
 public class UserBusinessModel extends UserModel{
 
+    @Column(nullable = false)
     private String businessName;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String cnpj;
 
 }

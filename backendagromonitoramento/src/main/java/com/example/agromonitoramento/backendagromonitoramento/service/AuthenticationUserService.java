@@ -1,6 +1,6 @@
 package com.example.agromonitoramento.backendagromonitoramento.service;
 
-import com.example.agromonitoramento.backendagromonitoramento.dto.LoginUserDTO;
+import com.example.agromonitoramento.backendagromonitoramento.dto.LoginUserRequestDTO;
 import com.example.agromonitoramento.backendagromonitoramento.errors.InvalidPasswordException;
 import com.example.agromonitoramento.backendagromonitoramento.model.UserBusinessModel;
 import com.example.agromonitoramento.backendagromonitoramento.model.UserIndividualModel;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
-
 @Service
 public class AuthenticationUserService {
 
@@ -27,31 +26,25 @@ public class AuthenticationUserService {
     @Autowired
     private UserBusinessRepository userBusinessRepository;
 
-    public void identificationUser(LoginUserDTO loginUsuarioDTO) {
+    public UserModel identificationUser(LoginUserRequestDTO loginUsuarioDTO) {
 
         String email = loginUsuarioDTO.getEmail();
         String password = loginUsuarioDTO.getPassword();
 
-        //Obs: a verificação se os campos email e senha foram preenchidos é realizado no dto c/NotBlank
-
         Optional<UserIndividualModel> userOpt = userIndividualRepository.findByEmail(email);
-        if(userOpt.isPresent()){
-            authenticate(userOpt.get(), password, userIndividualRepository);
-            return;
+        if (userOpt.isPresent()) {
+            return authenticate(userOpt.get(), password, userIndividualRepository);
         }
 
         Optional<UserBusinessModel> userBusOpt = userBusinessRepository.findByEmail(email);
-        if(userBusOpt.isPresent()){
-            authenticate(userBusOpt.get(), password, userBusinessRepository);
-            return;
+        if (userBusOpt.isPresent()) {
+            return authenticate(userBusOpt.get(), password, userBusinessRepository);
         }
 
         throw new IllegalArgumentException("User not found");
-
     }
 
-
-    private <T extends UserModel> void authenticate(
+    private <T extends UserModel> T authenticate(
             T user, String password, JpaRepository<T, UUID> repository) {
 
         if (!user.isActive()) {
@@ -63,19 +56,20 @@ public class AuthenticationUserService {
 
             if (user.getAttemptsLogin() >= 3) {
                 user.setActive(false);
-                repository.save(user); // salva antes de lançar
+                repository.save(user);
                 throw new IllegalArgumentException("User inactivated due to too many login attempts");
             }
 
-            repository.save(user); // salva a tentativa
+            repository.save(user);
             throw new InvalidPasswordException("Incorrect email or password");
         }
 
-        // Se acertou a senha, zera tentativas
+        // Zera tentativas se senha correta
         if (user.getAttemptsLogin() > 0) {
             user.setAttemptsLogin(0);
             repository.save(user);
         }
-    }
 
+        return user;
+    }
 }
