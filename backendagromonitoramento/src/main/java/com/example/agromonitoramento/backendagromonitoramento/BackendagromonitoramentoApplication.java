@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan(basePackages = "com.example.agromonitoramento.backendagromonitoramento.model")
+@EntityScan(basePackages = "com.example.agromonitoramento.backendagromonitoramento.users")
 public class BackendagromonitoramentoApplication {
     public static void main(String[] args) {
         SpringApplication.run(BackendagromonitoramentoApplication.class, args);
