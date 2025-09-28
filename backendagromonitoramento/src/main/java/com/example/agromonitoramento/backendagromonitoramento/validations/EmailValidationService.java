@@ -1,7 +1,7 @@
 package com.example.agromonitoramento.backendagromonitoramento.validations;
 
-import com.example.agromonitoramento.backendagromonitoramento.users.UserBusinessRepository;
-import com.example.agromonitoramento.backendagromonitoramento.users.UserIndividualRepository;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.UserBusinessRepository;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.UserIndividualRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

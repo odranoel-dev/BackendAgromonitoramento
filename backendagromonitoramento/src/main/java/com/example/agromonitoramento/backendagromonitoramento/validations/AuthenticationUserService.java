@@ -2,11 +2,11 @@ package com.example.agromonitoramento.backendagromonitoramento.validations;
 
 import com.example.agromonitoramento.backendagromonitoramento.users.dto.LoginUserRequestDTO;
 import com.example.agromonitoramento.backendagromonitoramento.errors.InvalidPasswordException;
-import com.example.agromonitoramento.backendagromonitoramento.users.UserBusinessModel;
-import com.example.agromonitoramento.backendagromonitoramento.users.UserIndividualModel;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.UserBusinessModel;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.UserIndividualModel;
 import com.example.agromonitoramento.backendagromonitoramento.users.UserModel;
-import com.example.agromonitoramento.backendagromonitoramento.users.UserBusinessRepository;
-import com.example.agromonitoramento.backendagromonitoramento.users.UserIndividualRepository;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.UserBusinessRepository;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.UserIndividualRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

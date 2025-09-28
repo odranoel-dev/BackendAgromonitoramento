@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.lang.annotation.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
@@ -49,7 +50,10 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
                                 "/api/webhook/**",
-                                "/user/**" // se quiser liberar rotas públicas de usuário
+                                "/user/**", // se quiser liberar rotas públicas de usuário
+                                "/farms/**",
+                                "/userEmployee/**",
+                                "/logout/**"
                         ).permitAll()
                         // todas as outras rotas exigem autenticação
                         .anyRequest().authenticated()

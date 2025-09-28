@@ -1,11 +1,11 @@
-package com.example.agromonitoramento.backendagromonitoramento.users;
+package com.example.agromonitoramento.backendagromonitoramento.users.business;
 
 import com.example.agromonitoramento.backendagromonitoramento.validations.EmailValidationService;
 import com.example.agromonitoramento.backendagromonitoramento.validations.PasswordValidationService;
 import com.example.agromonitoramento.backendagromonitoramento.validations.PhoneNumberValidationService;
-import com.example.agromonitoramento.backendagromonitoramento.users.dto.RegisterUserBusinessDTO;
-import com.example.agromonitoramento.backendagromonitoramento.users.dto.UpdateUserBusinessRequestDTO;
-import com.example.agromonitoramento.backendagromonitoramento.users.dto.UpdateUserBusinessResponseDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.dto.RegisterUserBusinessDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.dto.UpdateUserBusinessRequestDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.dto.UpdateUserBusinessResponseDTO;
 import com.example.agromonitoramento.backendagromonitoramento.whatsapp.WhatsappService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

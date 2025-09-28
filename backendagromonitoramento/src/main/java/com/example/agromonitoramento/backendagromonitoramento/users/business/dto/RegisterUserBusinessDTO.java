@@ -1,11 +1,12 @@
-package com.example.agromonitoramento.backendagromonitoramento.users.dto;
+package com.example.agromonitoramento.backendagromonitoramento.users.business.dto;
 
+import com.example.agromonitoramento.backendagromonitoramento.users.dto.RegisterUserDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 @Data
-public class RegisterUserBusinessDTO extends RegisterUserDTO{
+public class RegisterUserBusinessDTO extends RegisterUserDTO {
 
     @NotBlank(message = "Business name is required.")
     private String businessName;

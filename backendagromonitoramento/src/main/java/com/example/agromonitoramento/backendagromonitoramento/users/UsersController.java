@@ -1,8 +1,19 @@
 package com.example.agromonitoramento.backendagromonitoramento.users;
 
+import com.example.agromonitoramento.backendagromonitoramento.jwt.JwtService;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.UserBusinessService;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.dto.RegisterUserBusinessDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.dto.UpdateUserBusinessRequestDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.business.dto.UpdateUserBusinessResponseDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.UserIndividualService;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.dto.RegisterUserIndividualDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.dto.UpdateUserIndividualRequestDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.dto.UpdateUserIndividualResponseDTO;
 import com.example.agromonitoramento.backendagromonitoramento.validations.AuthenticationUserService;
 import com.example.agromonitoramento.backendagromonitoramento.users.dto.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,30 +45,25 @@ public class UsersController {
     @Autowired
     private JwtEncoder jwtEncoder;
 
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginUserResponseDTO> loginResponseResponseEntity(
-            @RequestBody LoginUserRequestDTO loginUserRequestDTO){
+    public ResponseEntity<LoginUserResponseDTO> login(
+            @RequestBody LoginUserRequestDTO loginUserRequestDTO,
+            HttpServletResponse response) {
 
-        UserModel user = this.authenticationUserService.identificationUser(loginUserRequestDTO);
+        UserModel user = authenticationUserService.identificationUser(loginUserRequestDTO);
 
-        var now = Instant.now();
-        var expiresIn = 300L;
+        long duracao = 300L; // 5 minutos
+        String token = jwtService.gerarToken(user.getId().toString(), duracao);
+        Cookie cookie = jwtService.gerarCookie(token, duracao);
 
-        var claims = JwtClaimsSet.builder()
-                .issuer("backendAgromonitoramento")
-                .subject(user.getId().toString())
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(expiresIn))
-                .build();
+        response.addCookie(cookie);
 
-        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-        return ResponseEntity.ok(new LoginUserResponseDTO(jwtValue, expiresIn));
-
+        return ResponseEntity.ok(new LoginUserResponseDTO(null, duracao));
     }
 
-    // passar login tipo request e retorno do tipo response.
 
     @PostMapping("/register-individual")
     public ResponseEntity<String> registerIndividual(@RequestBody @Valid RegisterUserIndividualDTO registerUserIndividualDTO) {

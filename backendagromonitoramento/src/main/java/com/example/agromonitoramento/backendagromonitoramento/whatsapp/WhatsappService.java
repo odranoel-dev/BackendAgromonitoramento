@@ -1,6 +1,5 @@
 package com.example.agromonitoramento.backendagromonitoramento.whatsapp;
 
-import com.example.agromonitoramento.backendagromonitoramento.users.dto.WhatsappDTO;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

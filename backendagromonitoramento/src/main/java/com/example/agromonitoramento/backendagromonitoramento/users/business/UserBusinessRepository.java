@@ -1,4 +1,4 @@
-package com.example.agromonitoramento.backendagromonitoramento.users;
+package com.example.agromonitoramento.backendagromonitoramento.users.business;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

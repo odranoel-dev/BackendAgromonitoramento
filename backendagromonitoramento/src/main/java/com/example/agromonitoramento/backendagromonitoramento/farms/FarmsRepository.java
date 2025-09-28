@@ -1,4 +1,16 @@
 package com.example.agromonitoramento.backendagromonitoramento.farms;
 
-public class FarmsRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface FarmsRepository extends JpaRepository<FarmsModel, UUID> {
+
+    List<FarmsModel> findByUserBusinessId(UUID userBusinessId);
+
+
 }

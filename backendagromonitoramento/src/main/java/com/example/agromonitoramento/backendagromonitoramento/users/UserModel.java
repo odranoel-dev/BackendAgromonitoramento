@@ -36,8 +36,7 @@ public class UserModel{
     @Column(nullable = false)
     private String password;
 
-    @Column(columnDefinition = "boolean default true")
-    private boolean isActive;
+    private boolean isActive = true;
 
     @Column(columnDefinition = "int default 0")
     private int attemptsLogin;

@@ -1,8 +1,8 @@
-package com.example.agromonitoramento.backendagromonitoramento.users;
+package com.example.agromonitoramento.backendagromonitoramento.users.individual;
 
-import com.example.agromonitoramento.backendagromonitoramento.users.dto.RegisterUserIndividualDTO;
-import com.example.agromonitoramento.backendagromonitoramento.users.dto.UpdateUserIndividualRequestDTO;
-import com.example.agromonitoramento.backendagromonitoramento.users.dto.UpdateUserIndividualResponseDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.dto.RegisterUserIndividualDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.dto.UpdateUserIndividualRequestDTO;
+import com.example.agromonitoramento.backendagromonitoramento.users.individual.dto.UpdateUserIndividualResponseDTO;
 import com.example.agromonitoramento.backendagromonitoramento.validations.EmailValidationService;
 import com.example.agromonitoramento.backendagromonitoramento.validations.PasswordValidationService;
 import com.example.agromonitoramento.backendagromonitoramento.validations.PhoneNumberValidationService;
